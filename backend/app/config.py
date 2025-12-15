@@ -1,4 +1,4 @@
-from pydantic_core import BaseSettings
+from pydantic_settings import BaseSettings
 from typing import List
 
 class Settings(BaseSettings):
@@ -6,14 +6,14 @@ class Settings(BaseSettings):
   API_V1_STR: str = "/api/v1"
   VERSION: str = "0.1.0"
 
-  BACKEND_CROS_ORIGINS: List[str] = [
+  BACKEND_CORS_ORIGINS: List[str] = [
     "https://localhost/3000",
     "http://localhost:8000",
   ]
 
   NEO4J_URI: str = "bold://localhost:7687"
   NEO4J_USER:str = "neo4j"
-  NEO4J_PASSWORD = "password"
+  NEO4J_PASSWORD:str = "password"
 
   class Config:
     case_sensitive = True
