@@ -11,7 +11,7 @@ class Settings(BaseSettings):
     "http://localhost:8000",
   ]
 
-  NEO4J_URI: str = "bold://localhost:7687"
+  NEO4J_URI: str = "bolt://localhost:7687"
   NEO4J_USER:str = "neo4j"
   NEO4J_PASSWORD:str = "password"
 

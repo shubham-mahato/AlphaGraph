@@ -3,6 +3,8 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from app.routes import company_router
+from app.db.neo4j_client import init_driver,close_driver
 from app.config import settings
 
 logging.basicConfig(level = logging.INFO)
@@ -17,9 +19,11 @@ async def lifespan(app: FastAPI):
   """
 
   logger.info("AlphaGraph is starting up ....")
-  logger.info(f"Configuration loaded: {settings.PROJECT_NAME}")
+  init_driver()
 
   yield
+
+  close_driver()
 
   logger.info("AlphaGraph is shutting down ...")
 
@@ -43,6 +47,8 @@ def get_application()-> FastAPI:
     allow_methods = ["*"],
     allow_headers =["*"]
   )
+  application.include_router(company_router.router)
+  
   return application
 app = get_application()
 

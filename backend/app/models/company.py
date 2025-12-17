@@ -12,7 +12,7 @@ class Company(BaseModel):
 class Event(BaseModel):
   event_id:str
   title: str
-  sentiment: Optional[str]=None
+  sentiment: Optional[float]=None
   timestamp:Optional[str] = None
   event_type:Optional[str]=None
 
