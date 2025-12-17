@@ -1,0 +1,30 @@
+[
+  {
+    "ticker": "TCS",
+    "name": "Tata Consultancy Services",
+    "sector": "Technology",
+    "country": "IN",
+    "exchange": "NSE"
+  },
+  {
+    "ticker": "INFY",
+    "name": "Infosys Limited",
+    "sector": "Technology",
+    "country": "IN",
+    "exchange": "NSE"
+  },
+  {
+    "ticker": "HDFCBANK",
+    "name": "HDFC Bank Limited",
+    "sector": "Banking",
+    "country": "IN",
+    "exchange": "NSE"
+  },
+  {
+    "ticker": "ICICIBANK",
+    "name": "ICICI Bank Limited",
+    "sector": "Banking",
+    "country": "IN",
+    "exchange": "NSE"
+  }
+]
