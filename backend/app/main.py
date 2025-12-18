@@ -3,7 +3,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.routes import company_router, event_router
+from app.routes import company_router, event_router , graph_router
 from app.db.neo4j_client import init_driver,close_driver
 from app.config import settings
 
@@ -49,6 +49,7 @@ def get_application()-> FastAPI:
   )
   application.include_router(company_router.router)
   application.include_router(event_router.router)
+  application.include_router(graph_router.router)
   return application
 app = get_application()
 
