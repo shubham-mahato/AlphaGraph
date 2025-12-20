@@ -1,0 +1,28 @@
+{
+  "TCS": [
+    "Tata Consultancy Services",
+    "TCS",
+    "Tata Consultancy",
+    "Tata Cons. Serv."
+  ],
+  "INFY": [
+    "Infosys",
+    "Infosys Ltd",
+    "Infosys Limited"
+  ],
+  "HDFCBANK": [
+    "HDFC Bank",
+    "HDFC Bank Ltd",
+    "Housing Development Finance Corporation Bank"
+  ],
+  "ICICIBANK": [
+    "ICICI Bank",
+    "ICICI Bank Ltd"
+  ],
+  "RELIANCE": [
+    "Reliance Industries",
+    "Reliance",
+    "RIL",
+    "Reliance Industries Limited"
+  ]
+}
