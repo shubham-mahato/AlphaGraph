@@ -1,13 +1,28 @@
 import hashlib
 from typing import List
+import json
+from pathlib import Path
 from nlp_services.schemas.event_schema import EventSchema
 from nlp_services.models.ner_models import NERModel
 from nlp_services.models.sentiment_model import SentimentModel
+from nlp_services.mapping.entity_mapper import EntityMapper
 
 class NewsEventPipeline:
   def __init__(self):
     self.ner = NERModel()
     self.sentiment = SentimentModel()
+
+    current_file = Path(__file__).resolve()
+    mapping_dir = current_file.parents[1] / "mapping"
+    alias_path = mapping_dir / "company_aliases.json"
+
+    if not alias_path.exists():
+      raise FileNotFoundError(f"Critical: Alias map not found at {alias_path}") 
+    
+    with open(alias_path,"r", encoding="utf-8") as f:
+      alias_map = json.load(f)
+    
+    self.entity_mapper = EntityMapper(alias_map)
 
   def classify_event_type(self,text:str) ->str:
     text = text.lower()
@@ -35,7 +50,8 @@ class NewsEventPipeline:
     text_blob = f"{title} {description} {content}"
 
     #Extract Entities
-    entities = self.ner.extract_org_entities(text_blob)
+    raw_entities = self.ner.extract_org_entities(text_blob)
+    mapped_companies = self.entity_mapper.map_entities(raw_entities)
 
     #Score Sentiment
     sentiment_score = self.sentiment.score(text_blob)
@@ -53,19 +69,21 @@ class NewsEventPipeline:
       timestamp=str(published_at),
       sentiment=sentiment_score,
       event_type=event_type,
-      mentioned_entities=entities,
+      mentioned_companies=mapped_companies,
     )
   
   def process_articles(self, articles: List[dict])->List[EventSchema]:
     events =[]
-    print(f"NLP Pipeline processing {len(articles)} raw articles...")
+    # print(f"NLP Pipeline processing {len(articles)} raw articles...")
     for article in articles:
       try:
         if not article.get("title"):
           continue
 
         event=self.process_article(article)
-        events.append(event)
+        if event.mentioned_companies:
+          events.append(event)
       except Exception as e:
         print(f"!!! Skipping article error: {e} !!! ")
+        pass
     return events

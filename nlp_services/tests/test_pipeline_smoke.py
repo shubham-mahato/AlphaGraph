@@ -29,7 +29,7 @@ def test_pipeline_smoke():
 
   assert sample_event.event_id is not None
   assert isinstance(sample_event.sentiment, float)
-  assert isinstance(sample_event.mentioned_entities, list)
+  assert isinstance(sample_event.mentioned_companies, list)
 
   print("\n SMOKE TEST PASSED: Raw JSON -> Structured EventSchema works!")
 
