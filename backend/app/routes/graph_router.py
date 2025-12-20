@@ -7,7 +7,7 @@ router = APIRouter(
   tags= ["Graph Visualization"]
 )
 
-@router.get("/company/{ticker}", response_class=GraphResponse)
+@router.get("/company/{ticker}", response_model=GraphResponse)
 async def company_subgraph(ticker:str):
   """
     Get the graph topology (nodes & edges) for a specific company.

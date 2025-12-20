@@ -1,9 +1,9 @@
 import spacy
 from typing import List
 
-class NER_Model:
+class NERModel:
   def __init__(self):
-    self.ner =spacy.load("en_core_web_sm")
+    self.nlp =spacy.load("en_core_web_sm")
   
   def extract_org_entities(self,text:str)->List[str]:
     """
@@ -17,7 +17,7 @@ class NER_Model:
     orgs = set()
 
     for ent in doc.ents:
-      if ent.lable_ == "ORG":
+      if ent.label_ == "ORG":
         orgs.add(ent.text.strip())
     
     return list(orgs)

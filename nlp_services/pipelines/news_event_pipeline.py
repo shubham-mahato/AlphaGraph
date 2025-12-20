@@ -1,12 +1,12 @@
 import hashlib
 from typing import List
 from nlp_services.schemas.event_schema import EventSchema
-from nlp_services.models.ner_models import NER_Model
+from nlp_services.models.ner_models import NERModel
 from nlp_services.models.sentiment_model import SentimentModel
 
 class NewsEventPipeline:
   def __init__(self):
-    self.ner = NER_Model()
+    self.ner = NERModel()
     self.sentiment = SentimentModel()
 
   def classify_event_type(self,text:str) ->str:
