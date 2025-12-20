@@ -8,5 +8,4 @@ class EventSchema(BaseModel):
   timestamp: Optional[str] =None
   sentiment:float
   event_type: str
-  mentioned_entities: List[str]
-  
+  mentioned_companies: List[str]
