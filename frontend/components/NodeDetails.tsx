@@ -6,14 +6,16 @@ export type SelectedNode = {
   description?: string;
   sentiment?: number;
   timestamp?: string;
+  event_id?: string; // Explicitly added for the simulation button
   [key: string]: unknown;
 };
 
 type Props = {
   node: SelectedNode | null;
+  onSimulate?: (eventId: string) => void; // <--- NEW PROP ADDED
 };
 
-export default function NodeDetails({ node }: Props) {
+export default function NodeDetails({ node, onSimulate }: Props) {
   if (!node) {
       return (
         <div className="p-4 bg-gray-50 border border-gray-200 rounded-lg text-gray-500 text-sm text-center h-[600px] flex items-center justify-center">
@@ -43,13 +45,23 @@ export default function NodeDetails({ node }: Props) {
             {node.description}
           </p>
         )}
+
+        {/* ✅ NEW: SHOCK SIMULATION BUTTON */}
+        {isEvent && onSimulate && (
+          <button
+            onClick={() => onSimulate(node.event_id as string || node.id)}
+            className="w-full mb-6 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded transition-all shadow-md flex items-center justify-center gap-2"
+          >
+            <span>⚡ Run Shock Simulation</span>
+          </button>
+        )}
   
         <div className="space-y-2 text-sm border-t pt-4">
           {node.sentiment !== undefined && (
             <div className="flex justify-between">
               <span className="text-gray-500">Sentiment Score:</span>
-              <span className={`font-mono font-bold ${node.sentiment > 0 ? "text-green-600" : "text-red-600"}`}>
-                {node.sentiment.toFixed(2)}
+              <span className={`font-mono font-bold ${Number(node.sentiment) > 0 ? "text-green-600" : "text-red-600"}`}>
+                {Number(node.sentiment).toFixed(2)}
               </span>
             </div>
           )}
