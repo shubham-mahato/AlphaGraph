@@ -9,5 +9,5 @@ class ShockImpact(BaseModel):
 
 class ShockResponse(BaseModel):
   event_id: str
-  base_sentiment: str
+  base_sentiment: float
   impacts: List[ShockImpact]
