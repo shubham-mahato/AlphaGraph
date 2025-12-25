@@ -4,15 +4,19 @@ import json
 from pathlib import Path
 from nlp_services.schemas.event_schema import EventSchema
 from nlp_services.models.ner_models import NERModel
+# ✅ Ensure this import matches your FinBERT class name
 from nlp_services.models.sentiment_model import FinBERTSentimentModel
 from nlp_services.mapping.entity_mapper import EntityMapper
 
 class NewsEventPipeline:
   def __init__(self):
+    print("🚀 Initializing NLP Pipeline...")
+    
+    # 1. Initialize Models
     self.ner = NERModel()
-    self.entity_mapper = EntityMapper()
     self.sentiment = FinBERTSentimentModel()
 
+    # 2. Load Alias Map FIRST (Before initializing EntityMapper)
     current_file = Path(__file__).resolve()
     mapping_dir = current_file.parents[1] / "mapping"
     alias_path = mapping_dir / "company_aliases.json"
@@ -20,12 +24,14 @@ class NewsEventPipeline:
     if not alias_path.exists():
       raise FileNotFoundError(f"Critical: Alias map not found at {alias_path}") 
     
-    with open(alias_path,"r", encoding="utf-8") as f:
+    with open(alias_path, "r", encoding="utf-8") as f:
       alias_map = json.load(f)
     
+    # 3. Now safely initialize EntityMapper with the map
     self.entity_mapper = EntityMapper(alias_map)
+    print("✅ NLP Pipeline Ready.")
 
-  def classify_event_type(self,text:str) ->str:
+  def classify_event_type(self, text: str) -> str:
     text = text.lower()
 
     if any(k in text for k in ["earnings", "profit", "revenue", "q1", "q2", "q3", "q4"]):
@@ -38,11 +44,11 @@ class NewsEventPipeline:
       return "legal"
     return "general"
   
-  def generate_event_id(self,title:str,timestamp:str)->str:
+  def generate_event_id(self, title: str, timestamp: str) -> str:
     base = f"{title}_{timestamp}"
     return hashlib.md5(base.encode()).hexdigest()
   
-  def process_article(self,article:dict) ->EventSchema:
+  def process_article(self, article: dict) -> EventSchema:
     title = article.get("title") or ""
     description = article.get("description") or ""
     content = article.get("content") or ""
@@ -50,14 +56,14 @@ class NewsEventPipeline:
 
     text_blob = f"{title} {description} {content}"
 
-    #Extract Entities
+    # Extract Entities
     raw_entities = self.ner.extract_org_entities(text_blob)
     mapped_companies = self.entity_mapper.map_entities(raw_entities)
 
-    #Score Sentiment
+    # Score Sentiment (FinBERT)
     sentiment_score = self.sentiment.score(text_blob)
 
-    #Classify Type
+    # Classify Type
     event_type = self.classify_event_type(text_blob)
 
     # Generate Id
@@ -73,15 +79,15 @@ class NewsEventPipeline:
       mentioned_companies=mapped_companies,
     )
   
-  def process_articles(self, articles: List[dict])->List[EventSchema]:
-    events =[]
+  def process_articles(self, articles: List[dict]) -> List[EventSchema]:
+    events = []
     # print(f"NLP Pipeline processing {len(articles)} raw articles...")
     for article in articles:
       try:
         if not article.get("title"):
           continue
 
-        event=self.process_article(article)
+        event = self.process_article(article)
         if event.mentioned_companies:
           events.append(event)
       except Exception as e:
