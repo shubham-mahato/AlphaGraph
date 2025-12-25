@@ -4,13 +4,14 @@ import json
 from pathlib import Path
 from nlp_services.schemas.event_schema import EventSchema
 from nlp_services.models.ner_models import NERModel
-from nlp_services.models.sentiment_model import SentimentModel
+from nlp_services.models.sentiment_model import FinBERTSentimentModel
 from nlp_services.mapping.entity_mapper import EntityMapper
 
 class NewsEventPipeline:
   def __init__(self):
     self.ner = NERModel()
-    self.sentiment = SentimentModel()
+    self.entity_mapper = EntityMapper()
+    self.sentiment = FinBERTSentimentModel()
 
     current_file = Path(__file__).resolve()
     mapping_dir = current_file.parents[1] / "mapping"
