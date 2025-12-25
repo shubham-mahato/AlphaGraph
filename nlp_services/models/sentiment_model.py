@@ -1,6 +1,6 @@
 from typing import Dict,List
 import torch
-from transformers import AutoTokenization, AutoModelForSequenceClassification
+from transformers import AutoTokenizer, AutoModelForSequenceClassification
 
 class FinBERTSentimentModel:
     """
@@ -17,7 +17,7 @@ class FinBERTSentimentModel:
 
     def __init__(self):
       print(f"... Loading FinBERT ({self.MODEL_NAME})... this might take a moment.")
-      self.tokenizer = AutoTokenization.from_pretrained(self.MODEL_NAME)
+      self.tokenizer = AutoTokenizer.from_pretrained(self.MODEL_NAME)
       self.model = AutoModelForSequenceClassification.from_pretrained(self.MODEL_NAME)
       self.model.eval()
     
